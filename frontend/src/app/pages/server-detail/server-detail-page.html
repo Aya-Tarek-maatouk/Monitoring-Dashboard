@@ -1,0 +1,108 @@
+<a class="back-link" routerLink="/servers"><span aria-hidden="true">←</span> Server inventory</a>
+@if (server(); as item) {
+  <form class="history-filters" (ngSubmit)="applyRange()">
+    <label>From <input type="datetime-local" name="from" [(ngModel)]="from" /></label>
+    <label>To <input type="datetime-local" name="to" [(ngModel)]="to" /></label>
+    <button class="secondary-button" type="submit">Apply</button>
+  </form>
+  <section class="page-heading">
+    <div>
+      <div class="eyebrow">SERVER / DETAIL</div>
+      <h1>{{ item.name }}</h1>
+      <p>
+        {{ item.description || 'Monitored host' }} <span class="separator">·</span>
+        {{ item.ipAddress || 'Address not set' }}
+      </p>
+    </div>
+    <div class="server-health" [class.down]="item.status === 'Down'"><i></i>{{ item.status }}</div>
+  </section>
+  @if (error()) {
+    <div class="notice error-notice">{{ error() }}</div>
+  }
+  <section class="detail-stats">
+    <article class="detail-stat">
+      <span>CPU</span
+      ><strong>{{ metrics()[0]?.cpuUsage ?? 0 | number: '1.0-1' }}<small>%</small></strong>
+    </article>
+    <article class="detail-stat">
+      <span>MEMORY</span
+      ><strong>{{ metrics()[0]?.memoryUsage ?? 0 | number: '1.0-1' }}<small>%</small></strong>
+    </article>
+    <article class="detail-stat">
+      <span>DISK</span
+      ><strong>{{ metrics()[0]?.diskUsage ?? 0 | number: '1.0-1' }}<small>%</small></strong>
+    </article>
+    <article class="detail-stat">
+      <span>RESPONSE</span
+      ><strong>{{ metrics()[0]?.responseTime ?? 0 | number: '1.0-0' }}<small>ms</small></strong>
+    </article>
+  </section>
+  <article class="panel history-panel">
+    <div class="panel-heading">
+      <div>
+        <div class="panel-title">Resource history</div>
+        <div class="panel-subtitle">
+          Last {{ metrics().length }} samples · newest values shown above
+        </div>
+      </div>
+      <button class="secondary-button" type="button" (click)="refresh()">
+        <svg lucideIcon="refresh-cw" [size]="14"></svg>Refresh
+      </button>
+    </div>
+    <div class="history-legend">
+      <span><i class="cpu"></i>CPU</span><span><i class="memory"></i>Memory</span
+      ><span><i class="disk"></i>Disk</span>
+    </div>
+    <div class="history-chart">
+      <canvas #historyCanvas aria-label="Server CPU, memory and disk history"></canvas>
+      @if (!metrics().length && !loading()) {
+        <div class="chart-empty">No samples have been recorded yet.</div>
+      }
+    </div>
+  </article>
+  <article class="panel samples-panel">
+    <div class="panel-heading">
+      <div>
+        <div class="panel-title">Metric samples</div>
+        <div class="panel-subtitle">Most recent readings first</div>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>TIME</th>
+            <th>CPU</th>
+            <th>MEMORY</th>
+            <th>DISK</th>
+            <th>RESPONSE</th>
+            <th>STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (metric of metrics(); track metric.metricId) {
+            <tr>
+              <td>{{ metric.timestamp | date: 'MMM d, HH:mm:ss' }}</td>
+              <td>{{ metric.cpuUsage | number: '1.0-1' }}%</td>
+              <td>{{ metric.memoryUsage | number: '1.0-1' }}%</td>
+              <td>{{ metric.diskUsage | number: '1.0-1' }}%</td>
+              <td>{{ metric.responseTime | number: '1.0-0' }} ms</td>
+              <td>{{ metric.status }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+  <app-pagination
+    [page]="page()"
+    [pageSize]="pageSize()"
+    [totalCount]="totalCount()"
+    [loading]="loading()"
+    (pageChange)="changePage($event)"
+  />
+} @else if (!loading()) {
+  <div class="empty-detail">
+    <strong>Server not found</strong><a routerLink="/servers">Back to inventory</a>
+  </div>
+}

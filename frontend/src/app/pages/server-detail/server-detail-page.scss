@@ -1,0 +1,239 @@
+.history-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.history-filters label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  min-width: 0;
+}
+.history-filters input {
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 20px;
+  color: #6d7b71;
+  font-size: 11px;
+  text-decoration: none;
+}
+.back-link:hover {
+  color: #456c34;
+}
+.page-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.eyebrow {
+  color: #718078;
+  font: 10px var(--mono);
+  letter-spacing: 0.8px;
+}
+.page-heading h1 {
+  margin: 7px 0 5px;
+  font-size: 27px;
+}
+.page-heading p {
+  margin: 0;
+  color: #7c8880;
+  font-size: 11px;
+}
+.separator {
+  padding: 0 5px;
+  color: #b2bbb4;
+}
+.server-health {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 9px;
+  border-radius: 4px;
+  color: #5f8838;
+  background: #eef6e5;
+  font: 10px var(--mono);
+}
+.server-health i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.server-health.down {
+  color: #bf5947;
+  background: #fff0ed;
+}
+.detail-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.detail-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 15px 17px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+.detail-stat span {
+  color: #7e8a82;
+  font: 9px var(--mono);
+}
+.detail-stat strong {
+  color: #25372c;
+  font: 24px var(--mono);
+}
+.detail-stat small {
+  padding-left: 3px;
+  color: #87948b;
+  font-size: 11px;
+}
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  padding: 17px;
+}
+.history-panel {
+  margin-bottom: 14px;
+}
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.panel-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+.panel-subtitle {
+  margin-top: 4px;
+  color: #8a958e;
+  font-size: 10px;
+}
+.secondary-button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 9px;
+  border: 1px solid #dce3dc;
+  border-radius: 4px;
+  background: #fff;
+  color: #4e5c52;
+  font-size: 10px;
+  cursor: pointer;
+}
+.history-legend {
+  display: flex;
+  gap: 14px;
+  margin: 18px 0 6px;
+  color: #738078;
+  font-size: 10px;
+}
+.history-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.history-legend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.history-legend .cpu {
+  background: #739d39;
+}
+.history-legend .memory {
+  background: #48a99e;
+}
+.history-legend .disk {
+  background: #d68c56;
+}
+.history-chart {
+  position: relative;
+  height: 245px;
+}
+.history-chart canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.chart-empty {
+  position: absolute;
+  inset: 45% 0 auto;
+  text-align: center;
+  color: #98a39b;
+  font-size: 11px;
+  pointer-events: none;
+}
+.table-scroll {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+th {
+  height: 39px;
+  color: #87928b;
+  background: #fafbf9;
+  border-bottom: 1px solid #e9ede8;
+  font: 9px var(--mono);
+}
+td {
+  height: 43px;
+  color: #5d6a61;
+  border-bottom: 1px solid #edf0ec;
+  font: 10px var(--mono);
+}
+tr:last-child td {
+  border-bottom: 0;
+}
+.empty-detail {
+  padding: 70px 20px;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  color: #5c6a61;
+}
+.empty-detail a {
+  color: #62883f;
+  font-size: 11px;
+}
+.notice {
+  padding: 10px;
+  color: #a04c3c;
+  background: #fff0ed;
+  border-radius: 4px;
+  font-size: 11px;
+}
+@media (max-width: 760px) {
+  .page-heading {
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+  }
+  .detail-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .history-chart {
+    height: 200px;
+  }
+  .panel {
+    padding: 13px;
+  }
+}

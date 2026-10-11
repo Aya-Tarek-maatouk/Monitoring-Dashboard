@@ -1,0 +1,86 @@
+<section class="page-heading">
+  <div>
+    <div class="eyebrow">EVENTS / THRESHOLD MONITORING</div>
+    <h1>Alerts</h1>
+    <p>Threshold breaches and server health changes.</p>
+  </div>
+  <button class="secondary-button" type="button" (click)="refresh()">
+    <svg lucideIcon="refresh-cw" [size]="14"></svg>Refresh
+  </button>
+</section>
+@if (error()) {
+  <div class="notice">{{ error() }}</div>
+}
+<section class="panel alert-history">
+  <div class="history-toolbar">
+    <div class="filter-tabs">
+      <button
+        type="button"
+        [class.active]="status === 'Triggered'"
+        (click)="changeStatus('Triggered')"
+      >
+        Active</button
+      ><button
+        type="button"
+        [class.active]="status === 'Resolved'"
+        (click)="changeStatus('Resolved')"
+      >
+        Resolved</button
+      ><button type="button" [class.active]="status === 'All'" (click)="changeStatus('All')">
+        All alerts
+      </button>
+    </div>
+    <span>{{ totalCount() }} EVENTS</span>
+  </div>
+  @if (loading()) {
+    <div class="empty-message">Loading alert history…</div>
+  } @else if (!alerts().length) {
+    <div class="empty-message clear">
+      <svg lucideIcon="circle-check" [size]="24"></svg><strong>No alerts in this view</strong
+      ><span>Threshold events will appear as new samples are recorded.</span>
+    </div>
+  } @else {
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>CONDITION</th>
+            <th>SERVER</th>
+            <th>VALUE</th>
+            <th>THRESHOLD</th>
+            <th>STATE</th>
+            <th>CREATED</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (alert of alerts(); track alert.alertId) {
+            <tr>
+              <td>
+                <span class="condition"
+                  ><svg lucideIcon="circle-alert" [size]="16"></svg
+                  ><strong>{{ alert.metricType }}</strong></span
+                >
+              </td>
+              <td>Server #{{ alert.serverId }}</td>
+              <td class="value">{{ alert.metricValue | number: '1.0-1' }}%</td>
+              <td>{{ alert.threshold | number: '1.0-1' }}%</td>
+              <td>
+                <span class="status-tag" [class.resolved]="alert.status === 'Resolved'">{{
+                  alert.status
+                }}</span>
+              </td>
+              <td>{{ alert.createdAt | date: 'MMM d, HH:mm:ss' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
+<app-pagination
+  [page]="page()"
+  [pageSize]="pageSize()"
+  [totalCount]="totalCount()"
+  [loading]="loading()"
+  (pageChange)="changePage($event)"
+/>

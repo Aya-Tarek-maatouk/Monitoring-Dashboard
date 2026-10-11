@@ -1,0 +1,157 @@
+<section class="page-heading">
+  <div>
+    <div class="eyebrow">ACCESS / ADMINISTRATION</div>
+    <h1>User management</h1>
+    <p>Accounts and roles with access to this monitoring workspace.</p>
+  </div>
+  <button class="create-role-button" type="button" (click)="openCreate()" [disabled]="loading()">
+    <svg lucideIcon="plus" [size]="16"></svg>Create role
+  </button>
+</section>
+@if (error()) {
+  <div class="notice">{{ error() }}</div>
+}
+@if (message()) {
+  <div class="success-notice" role="status">{{ message() }}</div>
+}
+<section class="panel users-panel">
+  @if (loading()) {
+    <div class="empty-users">Loading accounts…</div>
+  } @else if (!users().length) {
+    <div class="empty-users">No users found.</div>
+  } @else {
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>ACCOUNT</th>
+            <th>EMAIL</th>
+            <th>ROLE</th>
+            <th>PERMISSIONS</th>
+            <th>CREATED</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.userId) {
+            <tr>
+              <td>
+                <span class="account-cell"
+                  ><i>{{ user.userName.slice(0, 1).toUpperCase() }}</i
+                  ><strong>{{ user.userName }}</strong></span
+                >
+              </td>
+              <td>{{ user.email }}</td>
+              <td>
+                <select
+                  [attr.aria-label]="'Role for ' + user.userName"
+                  [value]="drafts()[user.userId] ?? user.roleId"
+                  [disabled]="saving()"
+                  (change)="selectRole(user.userId, $event)"
+                >
+                  @for (role of roles(); track role.roleId) {
+                    <option [value]="role.roleId">{{ role.name }}</option>
+                  }
+                </select>
+              </td>
+              <td class="permissions-cell">{{ user.permissions.join(', ') || '—' }}</td>
+              <td>{{ user.createdAt | date: 'MMM d, y' }}</td>
+              <td>
+                <button
+                  class="row-action"
+                  type="button"
+                  [attr.aria-label]="'Save role for ' + user.userName"
+                  [attr.title]="'Save role for ' + user.userName"
+                  [disabled]="
+                    saving() || !drafts()[user.userId] || drafts()[user.userId] === user.roleId
+                  "
+                  (click)="requestChange(user)"
+                >
+                  <svg lucideIcon="save" [size]="16"></svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
+<app-pagination
+  [page]="page()"
+  [pageSize]="pageSize()"
+  [totalCount]="totalCount()"
+  [loading]="loading() || saving()"
+  (pageChange)="changePage($event)"
+/>
+<dialog
+  #assignmentDialog
+  (cancel)="$event.preventDefault(); cancelChange()"
+  aria-labelledby="assignment-title"
+>
+  @if (pendingUser(); as user) {
+    <h2 id="assignment-title">Change account role</h2>
+    <p>
+      Assign <strong>{{ roleLabel(drafts()[user.userId]) }}</strong> to {{ user.userName }}?
+    </p>
+    <p>The account will need to sign in again.</p>
+    <div class="dialog-actions">
+      <button type="button" (click)="cancelChange()" [disabled]="saving()">Cancel</button>
+      <button class="primary" type="button" (click)="confirmChange()" [disabled]="saving()">
+        {{ saving() ? 'Saving...' : 'Change role' }}
+      </button>
+    </div>
+  }
+</dialog>
+<dialog
+  #createDialog
+  (cancel)="$event.preventDefault(); closeCreate()"
+  aria-labelledby="create-role-title"
+>
+  <form #roleForm="ngForm" (ngSubmit)="createRole()">
+    <h2 id="create-role-title">Create role</h2>
+    <label for="role-name">Name</label
+    ><input
+      id="role-name"
+      name="roleName"
+      [(ngModel)]="roleName"
+      required
+      maxlength="50"
+      autofocus
+    />
+    <label for="role-description">Description</label
+    ><input
+      id="role-description"
+      name="roleDescription"
+      [(ngModel)]="roleDescription"
+      maxlength="250"
+    />
+    <fieldset>
+      <legend>Permissions</legend>
+      @for (permission of permissions(); track permission.permissionId) {
+        <label class="permission-choice"
+          ><input
+            type="checkbox"
+            [checked]="selectedPermissions().includes(permission.permissionId)"
+            (change)="togglePermission(permission.permissionId, $event)"
+            [disabled]="creating()"
+          />
+          <span
+            ><strong>{{ permission.name }}</strong
+            ><small>{{ permission.description }}</small></span
+          ></label
+        >
+      }
+    </fieldset>
+    <div class="dialog-actions">
+      <button type="button" (click)="closeCreate()" [disabled]="creating()">Cancel</button>
+      <button
+        class="primary"
+        type="submit"
+        [disabled]="roleForm.invalid || !roleName.trim() || creating()"
+      >
+        {{ creating() ? 'Creating...' : 'Create role' }}
+      </button>
+    </div>
+  </form>
+</dialog>

@@ -1,0 +1,139 @@
+<section class="page-heading">
+  <div>
+    <div class="eyebrow">WORKERS / EXECUTION</div>
+    <h1>Background jobs</h1>
+    <p>Hangfire execution history and worker state.</p>
+  </div>
+  <div class="job-heading-actions">
+    <button class="secondary-button" type="button" (click)="refresh()">
+      <svg lucideIcon="refresh-cw" [size]="14"></svg>Refresh</button
+    ><a class="dashboard-link" href="/hangfire" target="_blank" rel="noreferrer"
+      ><svg lucideIcon="arrow-up-right" [size]="15"></svg>Hangfire dashboard</a
+    >
+  </div>
+</section>
+<section class="job-cards">
+  <article class="job-card">
+    <div class="job-icon recurring"><svg lucideIcon="activity" [size]="19"></svg></div>
+    <div class="job-meta">
+      <span class="job-kind">RECURRING / EVERY 1 MIN</span>
+      <h2>Metrics collection</h2>
+      <p>Simulated CPU, memory, disk, response-time and status samples.</p>
+    </div>
+    <span class="job-state active"><i></i> SCHEDULED</span>
+  </article>
+  <article class="job-card">
+    <div class="job-icon delayed"><svg lucideIcon="clock-3" [size]="19"></svg></div>
+    <div class="job-meta">
+      <span class="job-kind">DELAYED / 5 MIN AFTER DOWN</span>
+      <h2>Server health follow-up</h2>
+      <p>Confirms whether a Down server has recovered after the delay.</p>
+    </div>
+    <span class="job-state active"><i></i> ARMED</span>
+  </article>
+  <article class="job-card">
+    <div class="job-icon reports"><svg lucideIcon="file-text" [size]="19"></svg></div>
+    <div class="job-meta">
+      <span class="job-kind">FIRE-AND-FORGET + CONTINUATION</span>
+      <h2>Report generation</h2>
+      <p>Builds CSV output then logs the simulated ready notification.</p>
+    </div>
+    <span class="job-state active"><i></i> AVAILABLE</span>
+  </article>
+</section>
+<section class="job-counts" aria-label="Hangfire state counts">
+  <article>
+    <span>ENQUEUED</span><strong>{{ counts().enqueued }}</strong>
+  </article>
+  <article>
+    <span>PROCESSING</span><strong>{{ counts().processing }}</strong>
+  </article>
+  <article>
+    <span>SCHEDULED</span><strong>{{ counts().scheduled }}</strong>
+  </article>
+  <article>
+    <span>SUCCEEDED</span><strong>{{ counts().succeeded }}</strong>
+  </article>
+  <article [class.failed-count]="counts().failed > 0">
+    <span>FAILED</span><strong>{{ counts().failed }}</strong>
+  </article>
+</section>
+@if (error()) {
+  <div class="job-message error" role="alert">{{ error() }}</div>
+}
+@if (message()) {
+  <div class="job-message success" role="status">{{ message() }}</div>
+}
+<section class="panel queue-panel">
+  <div class="panel-heading">
+    <div>
+      <div class="panel-title">Hangfire execution history</div>
+      <div class="panel-subtitle">
+        Sampled {{ lastRun() | date: 'HH:mm:ss' }} · refreshes every 5 seconds
+      </div>
+    </div>
+    <span class="queue-count">{{ totalCount() }} JOBS</span>
+  </div>
+  @if (!jobs().length) {
+    <div class="empty-queue">No retained Hangfire jobs are available.</div>
+  } @else {
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>JOB</th>
+            <th>ID</th>
+            <th>STATE</th>
+            <th>LAST CHANGE</th>
+            <th>ERROR</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (job of jobs(); track job.jobId) {
+            <tr>
+              <td class="job-name">{{ job.jobName }}</td>
+              <td class="job-id">{{ job.jobId }}</td>
+              <td>
+                <span
+                  class="job-status"
+                  [class.completed]="job.state === 'Succeeded'"
+                  [class.failed]="job.state === 'Failed'"
+                  [class.processing]="job.state === 'Processing'"
+                  >{{ job.state }}</span
+                >
+              </td>
+              <td>
+                {{ job.stateChangedAt ? (job.stateChangedAt | date: 'MMM d, HH:mm:ss') : '—' }}
+              </td>
+              <td class="job-error" [title]="job.error || ''">{{ job.error || '—' }}</td>
+              <td>
+                @if (job.canRetry && auth.session()?.permissions?.includes('jobs.retry')) {
+                  <button
+                    class="retry-button"
+                    type="button"
+                    [disabled]="retryingJobId() === job.jobId"
+                    [attr.aria-label]="'Retry job ' + job.jobId"
+                    (click)="retry(job)"
+                  >
+                    <svg lucideIcon="refresh-cw" [size]="13"></svg
+                    >{{ retryingJobId() === job.jobId ? 'Queueing…' : 'Retry' }}
+                  </button>
+                } @else {
+                  <span class="no-action">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
+<app-pagination
+  [page]="page()"
+  [pageSize]="pageSize()"
+  [totalCount]="totalCount()"
+  [loading]="loading()"
+  (pageChange)="changePage($event)"
+/>

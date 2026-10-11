@@ -1,0 +1,53 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.toast-region {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: min(460px, calc(100vw - 40px));
+  z-index: 2000;
+}
+
+.error-toast {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) 32px;
+  align-items: start;
+  gap: 12px;
+  padding: 16px;
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--alert);
+  border-radius: 6px;
+  box-shadow: 0 8px 28px #1b292224;
+  font-size: 14px;
+  line-height: 1.5;
+
+  > svg {
+    color: var(--alert);
+    margin-top: 4px;
+  }
+
+  span {
+    overflow-wrap: anywhere;
+  }
+
+  button {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: var(--paper);
+    color: var(--ink);
+  }
+}

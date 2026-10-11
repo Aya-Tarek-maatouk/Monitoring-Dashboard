@@ -1,0 +1,128 @@
+<section class="page-heading">
+  <div>
+    <div class="eyebrow">OUTPUT / PERFORMANCE REPORTS</div>
+    <h1>Reports</h1>
+    <p>Generate and download a CSV snapshot for a time range.</p>
+  </div>
+  <div class="refresh-label"><i></i> STATUS POLLS EVERY 5S</div>
+</section>
+@if (error()) {
+  <div class="notice" role="alert">{{ error() }}</div>
+}
+<label class="report-filter"
+  >Server
+  <select
+    aria-label="Filter reports by server"
+    [(ngModel)]="filterServerId"
+    (ngModelChange)="changeServerFilter()"
+  >
+    <option [ngValue]="0">All servers</option>
+    @for (server of servers(); track server.serverId) {
+      <option [ngValue]="server.serverId">{{ server.name }}</option>
+    }
+  </select>
+</label>
+@if (loading()) {
+  <p role="status">Loading reports...</p>
+}
+<section class="reports-layout">
+  <article class="panel request-panel">
+    <div class="panel-heading">
+      <span class="step-number">01</span>
+      <div>
+        <div class="panel-title">New report</div>
+        <div class="panel-subtitle">Choose a server and collection window.</div>
+      </div>
+    </div>
+    <form (ngSubmit)="createReport()">
+      <label for="report-server">Server</label
+      ><select id="report-server" name="server" [(ngModel)]="serverId" required>
+        <option [ngValue]="0" disabled>Select server</option>
+        @for (server of servers(); track server.serverId) {
+          <option [ngValue]="server.serverId">{{ server.name }}</option>
+        }
+      </select>
+      <div class="range-fields">
+        <div>
+          <label for="start-time">From</label
+          ><input
+            id="start-time"
+            name="start"
+            type="datetime-local"
+            [(ngModel)]="startTime"
+            required
+          />
+        </div>
+        <div>
+          <label for="end-time">To</label
+          ><input id="end-time" name="end" type="datetime-local" [(ngModel)]="endTime" required />
+        </div>
+      </div>
+      <div class="format-note">
+        <svg lucideIcon="file-text" [size]="16"></svg
+        ><span
+          ><strong>CSV export</strong
+          ><small>Includes timestamp, CPU, memory, disk, response time, and status.</small></span
+        >
+      </div>
+      <button class="primary-button" type="submit" [disabled]="busy() || !servers().length">
+        <svg lucideIcon="zap" [size]="15"></svg>{{ busy() ? 'Queueing…' : 'Generate report' }}
+      </button>
+    </form>
+  </article>
+  <article class="panel report-list">
+    <div class="panel-heading list-heading">
+      <div>
+        <div class="panel-title">Report queue</div>
+        <div class="panel-subtitle">{{ reports().length }} requests · latest first</div>
+      </div>
+      <span class="auto-indicator"><i></i> LIVE</span>
+    </div>
+    @if (!reports().length) {
+      <div class="empty-reports">
+        <svg lucideIcon="file-text" [size]="25"></svg><strong>No reports yet</strong
+        ><span>Generated files will appear here with their status.</span>
+      </div>
+    } @else {
+      <div class="report-items">
+        @for (report of reports(); track report.reportId) {
+          <div class="report-row">
+            <span class="report-icon"><svg lucideIcon="file-text" [size]="17"></svg></span>
+            <div class="report-info">
+              <strong>Server #{{ report.serverId }} report</strong
+              ><small
+                >{{ report.startTime | date: 'MMM d, HH:mm' }} —
+                {{ report.endTime | date: 'MMM d, HH:mm' }}</small
+              ><small>Requested {{ report.createdAt | date: 'MMM d, HH:mm:ss' }}</small>
+            </div>
+            <span
+              class="report-status"
+              [class.completed]="report.status === 'Completed'"
+              [class.failed]="report.status === 'Failed'"
+              >{{ report.status }}</span
+            >
+            @if (report.hasDownload) {
+              <button
+                class="download-button"
+                type="button"
+                [disabled]="downloading() === report.reportId"
+                [attr.aria-label]="'Download report ' + report.reportId"
+                title="Download CSV"
+                (click)="download(report)"
+              >
+                <svg lucideIcon="download" [size]="16"></svg>
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </article>
+</section>
+<app-pagination
+  [page]="page()"
+  [pageSize]="pageSize()"
+  [totalCount]="totalCount()"
+  [loading]="loading()"
+  (pageChange)="changePage($event)"
+/>

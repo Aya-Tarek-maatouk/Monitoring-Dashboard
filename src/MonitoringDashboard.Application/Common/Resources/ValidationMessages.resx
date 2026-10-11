@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="RoleNameInvalid" xml:space="preserve"><value>Role name must contain between 1 and 50 characters.</value></data>
+  <data name="RoleDescriptionInvalid" xml:space="preserve"><value>Role description cannot exceed 250 characters.</value></data>
+  <data name="PermissionIdsInvalid" xml:space="preserve"><value>Choose only existing permission IDs.</value></data>
+  <data name="UserNameInvalid" xml:space="preserve"><value>Username must contain between 3 and 50 characters.</value></data>
+  <data name="EmailInvalid" xml:space="preserve"><value>Enter a valid email address of no more than 100 characters.</value></data>
+  <data name="RegistrationPasswordInvalid" xml:space="preserve"><value>Password must contain between 12 and 128 characters.</value></data>
+  <data name="LoginIdentifierInvalid" xml:space="preserve"><value>Username or email is required and cannot exceed 100 characters.</value></data>
+  <data name="LoginPasswordInvalid" xml:space="preserve"><value>Password is required and cannot exceed 128 characters.</value></data>
+  <data name="RoleIdInvalid" xml:space="preserve"><value>A valid role ID is required.</value></data>
+  <data name="ServerNameInvalid" xml:space="preserve"><value>Server name must contain between 1 and 100 characters.</value></data>
+  <data name="ServerAddressInvalid" xml:space="preserve"><value>IP address cannot exceed 50 characters.</value></data>
+  <data name="ServerDescriptionInvalid" xml:space="preserve"><value>Server description cannot exceed 250 characters.</value></data>
+  <data name="ServerStatusInvalid" xml:space="preserve"><value>Choose a valid server status.</value></data>
+  <data name="MetricUsageInvalid" xml:space="preserve"><value>Usage must be a finite number between 0 and 100.</value></data>
+  <data name="ResponseTimeInvalid" xml:space="preserve"><value>Response time must be a finite non-negative number.</value></data>
+  <data name="ReportTimeRangeInvalid" xml:space="preserve"><value>StartTime must be earlier than EndTime.</value></data>
+  <data name="UserAlreadyExists" xml:space="preserve"><value>A user with that username or email already exists.</value></data>
+  <data name="UserRoleMissing" xml:space="preserve"><value>The required User role has not been seeded.</value></data>
+  <data name="InvalidCredentials" xml:space="preserve"><value>Invalid username or password.</value></data>
+  <data name="UserNotFound" xml:space="preserve"><value>The user was not found.</value></data>
+  <data name="RoleNotFound" xml:space="preserve"><value>The role was not found.</value></data>
+  <data name="CurrentRoleMissing" xml:space="preserve"><value>The user's current role was not found.</value></data>
+  <data name="LastAdminCannotBeDemoted" xml:space="preserve"><value>The last administrator cannot be demoted.</value></data>
+  <data name="RoleAlreadyExists" xml:space="preserve"><value>A role with that name already exists.</value></data>
+  <data name="ServerNotFound" xml:space="preserve"><value>The server was not found.</value></data>
+  <data name="ServerHasHistory" xml:space="preserve"><value>The server has monitoring history and cannot be deleted.</value></data>
+  <data name="ReportNotFound" xml:space="preserve"><value>The report was not found.</value></data>
+  <data name="ReportNotReady" xml:space="preserve"><value>The report is not ready for download.</value></data>
+  <data name="ReportFileMissing" xml:space="preserve"><value>The report file is no longer available.</value></data>
+  <data name="InvalidRequest" xml:space="preserve"><value>Invalid request.</value></data>
+  <data name="AuthenticationFailed" xml:space="preserve"><value>Authentication failed.</value></data>
+  <data name="ResourceNotFound" xml:space="preserve"><value>Resource not found.</value></data>
+  <data name="Conflict" xml:space="preserve"><value>Conflict.</value></data>
+  <data name="UnexpectedError" xml:space="preserve"><value>An unexpected error occurred.</value></data>
+  <data name="TryAgainLater" xml:space="preserve"><value>Please try again later.</value></data>
+  <data name="InvalidPaginationTitle" xml:space="preserve"><value>Invalid pagination parameters.</value></data>
+  <data name="InvalidPaginationDetails" xml:space="preserve"><value>Page must be greater than zero and pageSize must be between 1 and 100.</value></data>
+  <data name="JobNotFound" xml:space="preserve"><value>The job was not found.</value></data>
+  <data name="JobRetryConflict" xml:space="preserve"><value>Only failed jobs can be retried.</value></data>
+  <data name="SessionNoLongerValid" xml:space="preserve"><value>The session is no longer valid. Please sign in again.</value></data>
+  <data name="HubServerNotFound" xml:space="preserve"><value>The requested server does not exist.</value></data>
+</root>

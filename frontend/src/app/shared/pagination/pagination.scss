@@ -1,0 +1,36 @@
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 14px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+label,
+.page-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+select,
+button {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+select {
+  height: 32px;
+  padding: 0 6px;
+}
+button {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
